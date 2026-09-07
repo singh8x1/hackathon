@@ -1,0 +1,6 @@
+{
+  "name": "EngiViz - Engineering Day DataViz Hackathon",
+  "description": "GNA University Engineering Day Data Visualization Hackathon platform featuring curated Kaggle datasets, Python (Matplotlib, Seaborn, Plotly) & interactive dashboard submissions (Power BI, Tableau), judge scoring panel, and real-time leaderboard.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
