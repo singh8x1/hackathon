@@ -429,13 +429,19 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               </div>
 
               {/* Submit Button */}
-              <div className="pt-3 border-t border-slate-800 flex justify-end">
+              <div className="pt-3 border-t border-slate-800 flex flex-col items-end gap-3">
+                {authError && (
+                  <p className="text-xs text-rose-400 font-medium">
+                    {authError}
+                  </p>
+                )}
                 <button
                   type="submit"
-                  className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-500 shadow-md shadow-indigo-600/30 active:scale-95 transition-all cursor-pointer"
+                  disabled={loading}
+                  className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-500 shadow-md shadow-indigo-600/30 active:scale-95 transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <Sparkles className="w-4 h-4" />
-                  <span>Complete Registration &amp; Sign In</span>
+                  <span>{loading ? 'Registering...' : 'Complete Registration & Sign In'}</span>
                 </button>
               </div>
 
