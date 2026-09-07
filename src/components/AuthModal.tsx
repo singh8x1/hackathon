@@ -64,13 +64,13 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
   const handleRegisterSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setAuthError('');
     if (!name.trim() || !collegeRollNo.trim() || !email.trim() || !password) {
-      alert('Please fill out Name, College Email, Roll Number, and Password.');
+      setAuthError('Please fill out Name, College Email, Roll Number, and Password.');
       return;
     }
     
     setLoading(true);
-    setAuthError('');
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email.trim().toLowerCase(), password);
       
@@ -239,7 +239,6 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   </label>
                   <input
                     type="text"
-                    required
                     placeholder="e.g. Aarav Patel"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
@@ -253,7 +252,6 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   </label>
                   <input
                     type="text"
-                    required
                     placeholder="e.g. ENG-2024-CS042"
                     value={collegeRollNo}
                     onChange={(e) => setCollegeRollNo(e.target.value)}
@@ -271,7 +269,6 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   <Mail className="w-4 h-4 text-slate-500 absolute left-3 top-2.5" />
                   <input
                     type="email"
-                    required
                     placeholder="e.g. student@engicollege.edu"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
@@ -289,7 +286,6 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   <Lock className="w-4 h-4 text-slate-500 absolute left-3 top-2.5" />
                   <input
                     type="password"
-                    required
                     placeholder="Create a secure password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
