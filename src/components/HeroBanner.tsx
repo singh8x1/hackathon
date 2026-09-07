@@ -53,7 +53,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
             </h1>
 
             <p className="text-slate-300 text-sm sm:text-base leading-relaxed max-w-2xl">
-              Select an engineering dataset from Kaggle, uncover groundbreaking technical insights, and build compelling visual stories. Win prizes for <strong className="text-white">creative dashboard designs</strong> and analytical depth.
+              Select an engineering dataset from Kaggle, uncover groundbreaking technical insights, and build compelling visual stories. Focus on <strong className="text-white">creative dashboard designs</strong> and analytical depth.
             </p>
 
             {/* Core Track Highlights */}
@@ -129,10 +129,10 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
               <div className="flex items-center justify-between border-b border-slate-800 pb-4 mb-4">
                 <div className="flex items-center gap-2">
                   <Award className="w-5 h-5 text-amber-400" />
-                  <span className="text-sm font-bold text-white">Prize Pool &amp; Stats</span>
+                  <span className="text-sm font-bold text-white">Hackathon Stats</span>
                 </div>
                 <span className="text-xs px-2.5 py-1 rounded-full bg-amber-500/10 text-amber-300 font-bold border border-amber-500/30">
-                  ₹60,000 + Trophies
+                  Just for Fun!
                 </span>
               </div>
 
@@ -180,7 +180,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
               <div className="mt-4 pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs text-slate-400">
                 <span>Special Trophy:</span>
                 <span className="font-semibold text-emerald-300 bg-emerald-950/40 px-2 py-0.5 rounded border border-emerald-500/20">
-                  Best Python Insight Award (₹5,000)
+                  Best Python Insight Award (1 🍫)
                 </span>
               </div>
             </div>

@@ -53,7 +53,7 @@ export const Header: React.FC<HeaderProps> = ({
     { id: 'leaderboard', label: 'Live Leaderboard', icon: Trophy },
     { id: 'gallery', label: 'Visual Gallery', icon: Layers },
     { id: 'judging', label: 'Judges Portal', icon: BarChart3 },
-    { id: 'prizes', label: 'Prizes & Rubric', icon: Award },
+    { id: 'prizes', label: 'Rubric & Rules', icon: Award },
     { id: 'profile', label: 'My Profile', icon: User }
   ];
 
