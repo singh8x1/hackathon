@@ -10,9 +10,9 @@ import {
   ShieldCheck, 
   Sparkles,
   HelpCircle,
-  FileCheck
+  FileCheck,
+  Gift
 } from 'lucide-react';
-import { PRIZES } from '../data/mockSubmissions';
 
 interface PrizesAndRulesProps {
   onOpenSubmit: () => void;
@@ -33,7 +33,7 @@ export const PrizesAndRules: React.FC<PrizesAndRulesProps> = ({ onOpenSubmit }) 
             Hackathon Prizes &amp; Evaluation Rubric
           </h2>
           <p className="text-sm text-slate-400 mt-1 max-w-2xl">
-            Compete for cash bounties, trophies, and certifications across both Python and Interactive BI tracks.
+            This is a fun, low-stakes game. Have a good time, learn something new, and maybe get a sweet treat at the end!
           </p>
         </div>
 
@@ -49,64 +49,17 @@ export const PrizesAndRules: React.FC<PrizesAndRulesProps> = ({ onOpenSubmit }) 
       <div className="space-y-4">
         <h3 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
           <Award className="w-4 h-4 text-amber-400" />
-          Prize Distribution Pool (₹60,000 Total)
+          The Ultimate Prize
         </h3>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {PRIZES.slice(0, 3).map((prize, idx) => (
-            <div
-              key={idx}
-              className={`p-6 rounded-2xl bg-gradient-to-b ${prize.color} border shadow-xl flex flex-col justify-between relative overflow-hidden`}
-            >
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-3xl">{prize.trophy}</span>
-                  <span className="text-xs font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-slate-950/60 border border-slate-700">
-                    {prize.rank}
-                  </span>
-                </div>
-
-                <div>
-                  <h4 className="text-lg font-black text-white">{prize.title}</h4>
-                  <div className="text-base font-black text-amber-300 font-mono mt-1">
-                    {prize.reward}
-                  </div>
-                </div>
-
-                <p className="text-xs text-slate-300 leading-relaxed">
-                  {prize.description}
-                </p>
-              </div>
-
-              <div className="mt-6 pt-3 border-t border-slate-700/50 flex items-center justify-between text-[11px] text-slate-400">
-                <span>Awarded on Engineering Day</span>
-                <span className="font-semibold text-white">Main Stage</span>
-              </div>
+        <div className="p-8 rounded-2xl bg-gradient-to-r from-rose-500/10 via-amber-500/10 to-emerald-500/10 border border-slate-700/50 shadow-xl flex flex-col items-center justify-center text-center space-y-4">
+          <div className="text-6xl animate-bounce">🍫</div>
+          <div>
+            <h4 className="text-2xl font-black text-white">A Chocolate! LOL</h4>
+            <div className="text-sm font-bold text-slate-400 mt-2 max-w-md mx-auto">
+              No ₹60,000 cash pools here. The real prize is the friends we made along the way (and a piece of chocolate). Just keep it fun!
             </div>
-          ))}
-        </div>
-
-        {/* Special Category Awards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
-          {PRIZES.slice(3).map((prize, idx) => (
-            <div
-              key={idx}
-              className={`p-5 rounded-xl bg-gradient-to-b ${prize.color} border shadow-md flex items-start gap-4`}
-            >
-              <span className="text-3xl shrink-0 mt-0.5">{prize.trophy}</span>
-              <div className="space-y-1">
-                <div className="flex items-center gap-2">
-                  <h4 className="text-sm font-bold text-white">{prize.title}</h4>
-                  <span className="text-[10px] font-mono px-2 py-0.2 rounded bg-slate-950/80 text-amber-300 font-bold border border-slate-700">
-                    {prize.reward.split('+')[0]}
-                  </span>
-                </div>
-                <p className="text-xs text-slate-300 leading-relaxed">
-                  {prize.description}
-                </p>
-              </div>
-            </div>
-          ))}
+          </div>
         </div>
       </div>
 
