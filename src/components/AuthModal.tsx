@@ -74,7 +74,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email.trim().toLowerCase(), password);
       
-      const newUser: UserProfile = {
+      const newUser: Partial<UserProfile> = {
         id: userCredential.user.uid,
         name: name.trim(),
         email: email.trim().toLowerCase(),
@@ -82,15 +82,25 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         department,
         yearOfStudy,
         bio: bio.trim() || 'Engineering student participant in EngiViz 2026.',
-        githubUrl: githubUrl.trim() || '',
-        portfolioUrl: portfolioUrl.trim() || '',
         preferredTools,
         avatarSeed: name.slice(0, 2).toUpperCase(),
         avatarColor,
         joinedAt: new Date().toLocaleDateString('en-US', { month: 'short', year: 'numeric' })
       };
 
-      await setDoc(doc(db, 'users', newUser.id), newUser);
+      if (githubUrl.trim()) {
+        newUser.githubUrl = githubUrl.trim();
+      } else {
+        newUser.githubUrl = '';
+      }
+
+      if (portfolioUrl.trim()) {
+        newUser.portfolioUrl = portfolioUrl.trim();
+      } else {
+        newUser.portfolioUrl = '';
+      }
+
+      await setDoc(doc(db, 'users', newUser.id as string), newUser as UserProfile);
       
       confetti({
         particleCount: 60,

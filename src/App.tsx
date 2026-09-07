@@ -38,11 +38,20 @@ export default function App() {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
-        const docRef = doc(db, 'users', user.uid);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-          setCurrentUser(docSnap.data() as UserProfile);
-        } else {
+        try {
+          const docRef = doc(db, 'users', user.uid);
+          const docSnap = await getDoc(docRef);
+          if (docSnap.exists()) {
+            setCurrentUser(docSnap.data() as UserProfile);
+          } else {
+            // User exists in Auth, but no Firestore document was created 
+            // (happens if registration failed halfway through)
+            setCurrentUser(null);
+            await signOut(auth);
+            alert('Your profile data is missing, likely due to an interrupted registration. Please register again with a different email.');
+          }
+        } catch (e) {
+          console.error("Error fetching user profile:", e);
           setCurrentUser(null);
         }
       } else {
