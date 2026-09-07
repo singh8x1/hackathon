@@ -10,16 +10,19 @@ import { ProfileView } from './components/ProfileView';
 import { AuthModal } from './components/AuthModal';
 import { SubmissionFormModal } from './components/SubmissionFormModal';
 import { SubmissionDetailModal } from './components/SubmissionDetailModal';
-import { INITIAL_SUBMISSIONS } from './data/mockSubmissions';
-import { INITIAL_USERS } from './data/mockUsers';
-import { Submission, JudgeScore, UserProfile } from './types';
+import { AdminPortal } from './components/AdminPortal';
+import { Submission, JudgeScore, UserProfile, HackathonState } from './types';
 import { auth, db } from './lib/firebase';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
-import { collection, doc, onSnapshot, getDoc, setDoc, writeBatch } from 'firebase/firestore';
+import { collection, doc, onSnapshot, getDoc, setDoc } from 'firebase/firestore';
 
 export default function App() {
   const [currentUser, setCurrentUser] = useState<UserProfile | null>(null);
   const [submissions, setSubmissions] = useState<Submission[]>([]);
+  const [hackathonState, setHackathonState] = useState<HackathonState>({
+    hackathonStarted: false,
+    submissionsOpen: false
+  });
 
   // Current active navigation tab
   const [activeTab, setActiveTab] = useState<string>('datasets');
@@ -44,6 +47,16 @@ export default function App() {
         }
       } else {
         setCurrentUser(null);
+      }
+    });
+    return () => unsubscribe();
+  }, []);
+
+  // Sync Hackathon State
+  useEffect(() => {
+    const unsubscribe = onSnapshot(doc(db, 'settings', 'global'), (docSnap) => {
+      if (docSnap.exists()) {
+        setHackathonState(docSnap.data() as HackathonState);
       }
     });
     return () => unsubscribe();
@@ -150,33 +163,6 @@ export default function App() {
     }
   };
 
-  // Reset to default data if user wants fresh start (Seed mock data to Firestore)
-  const handleResetData = async () => {
-    if (confirm('Seed Firestore with initial benchmark mock data?')) {
-      try {
-        const batch = writeBatch(db);
-        
-        // Seed Submissions
-        INITIAL_SUBMISSIONS.forEach(sub => {
-          const docRef = doc(db, 'submissions', sub.id);
-          batch.set(docRef, sub);
-        });
-
-        // Seed Users
-        INITIAL_USERS.forEach(usr => {
-          const docRef = doc(db, 'users', usr.id);
-          batch.set(docRef, usr);
-        });
-
-        await batch.commit();
-        alert('Benchmark data seeded successfully!');
-      } catch (e) {
-        console.error('Failed to seed data', e);
-        alert('Failed to seed data.');
-      }
-    }
-  };
-
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col selection:bg-indigo-500/30 selection:text-indigo-200">
       
@@ -191,63 +177,89 @@ export default function App() {
         submissionCount={submissions.length}
         currentUser={currentUser}
         onOpenAuthModal={() => setIsAuthModalOpen(true)}
-      />
-
-      {/* Hero Banner (Always shown at top for high-impact hackathon presentation) */}
-      <HeroBanner
-        onOpenSubmit={() => {
-          setPreSelectedDatasetId(undefined);
-          setIsSubmitModalOpen(true);
-        }}
-        onBrowseDatasets={() => setActiveTab('datasets')}
-        onViewLeaderboard={() => setActiveTab('leaderboard')}
-        totalSubmissions={submissions.length}
+        hackathonState={hackathonState}
       />
 
       {/* Main Content Area */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {activeTab === 'datasets' && (
-          <DatasetExplorer
-            onSelectDatasetForSubmission={handleSelectDatasetForSubmission}
-          />
+        
+        {(!hackathonState.hackathonStarted && currentUser?.role !== 'admin' && activeTab !== 'profile') ? (
+          <div className="flex flex-col items-center justify-center py-20 text-center animate-in fade-in zoom-in duration-500">
+            <div className="w-24 h-24 rounded-3xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center mb-6">
+              <div className="w-12 h-12 rounded-xl bg-indigo-600 flex items-center justify-center text-white font-black font-mono text-xl shadow-[0_0_30px_rgba(79,70,229,0.5)]">
+                EV
+              </div>
+            </div>
+            <h1 className="text-3xl sm:text-4xl font-extrabold text-white mb-4 tracking-tight">
+              Hackathon Starting Soon
+            </h1>
+            <p className="text-slate-400 max-w-lg mb-8 text-lg">
+              The GNA University Data Visualization Hackathon hasn't officially started yet. Hang tight, and prepare your tools!
+            </p>
+          </div>
+        ) : (
+          <>
+            {activeTab !== 'admin' && activeTab !== 'profile' && (
+              <HeroBanner
+                onOpenSubmit={() => {
+                  setPreSelectedDatasetId(undefined);
+                  setIsSubmitModalOpen(true);
+                }}
+                onBrowseDatasets={() => setActiveTab('datasets')}
+                onViewLeaderboard={() => setActiveTab('leaderboard')}
+                totalSubmissions={submissions.length}
+                submissionsOpen={hackathonState.submissionsOpen}
+              />
+            )}
+
+            {activeTab === 'datasets' && (
+              <DatasetExplorer
+                onSelectDatasetForSubmission={handleSelectDatasetForSubmission}
+              />
+            )}
+
+            {activeTab === 'leaderboard' && (
+              <LeaderboardView
+                submissions={submissions}
+                onSelectSubmission={(sub) => setInspectingSubmission(sub)}
+                onOpenJudgePortal={handleOpenJudgePortalForSubmission}
+                onOpenSubmitModal={() => {
+                  setPreSelectedDatasetId(undefined);
+                  setIsSubmitModalOpen(true);
+                }}
+              />
+            )}
+
+            {activeTab === 'gallery' && (
+              <GalleryView
+                submissions={submissions}
+                onSelectSubmission={(sub) => setInspectingSubmission(sub)}
+                onOpenJudgePortal={handleOpenJudgePortalForSubmission}
+              />
+            )}
+
+            {activeTab === 'judging' && (
+              <JudgesPortal
+                submissions={submissions}
+                selectedSubmissionId={judgeSelectedSubmissionId}
+                onScoreSubmitted={handleScoreSubmitted}
+                onInspectSubmission={(sub) => setInspectingSubmission(sub)}
+              />
+            )}
+
+            {activeTab === 'prizes' && (
+              <PrizesAndRules
+                onOpenSubmit={() => {
+                  setPreSelectedDatasetId(undefined);
+                  setIsSubmitModalOpen(true);
+                }}
+              />
+            )}
+          </>
         )}
 
-        {activeTab === 'leaderboard' && (
-          <LeaderboardView
-            submissions={submissions}
-            onSelectSubmission={(sub) => setInspectingSubmission(sub)}
-            onOpenJudgePortal={handleOpenJudgePortalForSubmission}
-            onOpenSubmitModal={() => {
-              setPreSelectedDatasetId(undefined);
-              setIsSubmitModalOpen(true);
-            }}
-          />
-        )}
-
-        {activeTab === 'gallery' && (
-          <GalleryView
-            submissions={submissions}
-            onSelectSubmission={(sub) => setInspectingSubmission(sub)}
-            onOpenJudgePortal={handleOpenJudgePortalForSubmission}
-          />
-        )}
-
-        {activeTab === 'judging' && (
-          <JudgesPortal
-            submissions={submissions}
-            selectedSubmissionId={judgeSelectedSubmissionId}
-            onScoreSubmitted={handleScoreSubmitted}
-            onInspectSubmission={(sub) => setInspectingSubmission(sub)}
-          />
-        )}
-
-        {activeTab === 'prizes' && (
-          <PrizesAndRules
-            onOpenSubmit={() => {
-              setPreSelectedDatasetId(undefined);
-              setIsSubmitModalOpen(true);
-            }}
-          />
+        {activeTab === 'admin' && currentUser?.role === 'admin' && (
+          <AdminPortal hackathonState={hackathonState} currentUser={currentUser} />
         )}
 
         {activeTab === 'profile' && (
@@ -311,13 +323,6 @@ export default function App() {
             )}
             <span>•</span>
             <span>Powered by Python (Matplotlib, Seaborn, Plotly) &amp; Modern BI</span>
-            <span>•</span>
-            <button
-              onClick={handleResetData}
-              className="text-slate-400 hover:text-rose-400 underline transition-colors cursor-pointer"
-            >
-              Reset Benchmark Data
-            </button>
           </div>
         </div>
       </footer>

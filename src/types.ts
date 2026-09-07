@@ -42,6 +42,7 @@ export interface UserProfile {
   id: string;
   name: string;
   email: string;
+  role?: 'student' | 'admin' | 'judge';
   collegeRollNo: string;
   department: string;
   yearOfStudy: string;
@@ -52,6 +53,11 @@ export interface UserProfile {
   avatarSeed: string;
   avatarColor: string;
   joinedAt: string;
+}
+
+export interface HackathonState {
+  hackathonStarted: boolean;
+  submissionsOpen: boolean;
 }
 
 export interface Submission {

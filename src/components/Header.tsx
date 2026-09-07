@@ -12,7 +12,7 @@ import {
   UserCheck,
   ChevronDown
 } from 'lucide-react';
-import { UserProfile } from '../types';
+import { UserProfile, HackathonState } from '../types';
 
 interface HeaderProps {
   activeTab: string;
@@ -21,6 +21,7 @@ interface HeaderProps {
   submissionCount: number;
   currentUser: UserProfile | null;
   onOpenAuthModal: () => void;
+  hackathonState: HackathonState;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -29,7 +30,8 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenSubmit,
   submissionCount,
   currentUser,
-  onOpenAuthModal
+  onOpenAuthModal,
+  hackathonState
 }) => {
   // Hackathon deadline countdown (simulate 4h 32m remaining)
   const [timeLeft, setTimeLeft] = useState({ hours: 4, minutes: 32, seconds: 45 });
@@ -46,7 +48,7 @@ export const Header: React.FC<HeaderProps> = ({
     return () => clearInterval(timer);
   }, []);
 
-  const navItems = [
+  let navItems = [
     { id: 'datasets', label: 'Datasets & Python', icon: Code2 },
     { id: 'leaderboard', label: 'Live Leaderboard', icon: Trophy },
     { id: 'gallery', label: 'Visual Gallery', icon: Layers },
@@ -54,6 +56,14 @@ export const Header: React.FC<HeaderProps> = ({
     { id: 'prizes', label: 'Prizes & Rubric', icon: Award },
     { id: 'profile', label: 'My Profile', icon: User }
   ];
+
+  if (currentUser?.role === 'admin') {
+    navItems.push({ id: 'admin', label: 'Admin Panel', icon: UserCheck });
+  }
+
+  if (!hackathonState.hackathonStarted && currentUser?.role !== 'admin') {
+    navItems = navItems.filter(item => item.id === 'profile' || item.id === 'prizes');
+  }
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-slate-800/80 bg-slate-950/90 backdrop-blur-md">
@@ -175,12 +185,23 @@ export const Header: React.FC<HeaderProps> = ({
             <button
               id="submit-project-header-btn"
               onClick={onOpenSubmit}
-              className="relative inline-flex items-center gap-2 px-3 sm:px-4 py-2 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-indigo-500 via-indigo-600 to-purple-600 hover:from-indigo-600 hover:to-purple-700 shadow-md shadow-indigo-500/25 hover:shadow-indigo-500/40 active:scale-95 transition-all cursor-pointer"
+              disabled={!hackathonState.submissionsOpen}
+              className={`relative inline-flex items-center gap-2 px-3 sm:px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+                hackathonState.submissionsOpen
+                  ? 'text-white bg-gradient-to-r from-indigo-500 via-indigo-600 to-purple-600 hover:from-indigo-600 hover:to-purple-700 shadow-md shadow-indigo-500/25 hover:shadow-indigo-500/40 active:scale-95 cursor-pointer'
+                  : 'text-slate-500 bg-slate-800 border border-slate-700 cursor-not-allowed'
+              }`}
             >
               <FileUp className="w-4 h-4" />
-              <span className="hidden sm:inline">Submit Visualization</span>
-              <span className="sm:hidden">Submit</span>
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping absolute -top-0.5 -right-0.5" />
+              <span className="hidden sm:inline">
+                {hackathonState.submissionsOpen ? 'Submit Visualization' : 'Closed'}
+              </span>
+              <span className="sm:hidden">
+                {hackathonState.submissionsOpen ? 'Submit' : 'Closed'}
+              </span>
+              {hackathonState.submissionsOpen && (
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping absolute -top-0.5 -right-0.5" />
+              )}
             </button>
           </div>
         </div>

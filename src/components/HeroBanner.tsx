@@ -17,13 +17,15 @@ interface HeroBannerProps {
   onBrowseDatasets: () => void;
   onViewLeaderboard: () => void;
   totalSubmissions: number;
+  submissionsOpen?: boolean;
 }
 
 export const HeroBanner: React.FC<HeroBannerProps> = ({
   onOpenSubmit,
   onBrowseDatasets,
   onViewLeaderboard,
-  totalSubmissions
+  totalSubmissions,
+  submissionsOpen = true
 }) => {
   return (
     <section className="relative overflow-hidden border-b border-slate-800 bg-gradient-to-b from-slate-900/80 via-slate-950 to-slate-950 py-10 sm:py-14">
@@ -90,10 +92,15 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
               <button
                 id="hero-submit-cta-btn"
                 onClick={onOpenSubmit}
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-500 shadow-lg shadow-indigo-600/30 active:scale-95 transition-all cursor-pointer"
+                disabled={!submissionsOpen}
+                className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold transition-all ${
+                  submissionsOpen
+                    ? 'text-white bg-indigo-600 hover:bg-indigo-500 shadow-lg shadow-indigo-600/30 active:scale-95 cursor-pointer'
+                    : 'text-slate-500 bg-slate-800 border border-slate-700 cursor-not-allowed'
+                }`}
               >
-                <span>Submit Your Visualization</span>
-                <ArrowRight className="w-4 h-4" />
+                <span>{submissionsOpen ? 'Submit Your Visualization' : 'Submissions Closed'}</span>
+                {submissionsOpen && <ArrowRight className="w-4 h-4" />}
               </button>
 
               <button

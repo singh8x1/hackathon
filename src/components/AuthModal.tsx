@@ -111,16 +111,54 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     setAuthError('');
 
     if (!signInEmail.trim() || !signInPassword) {
-      setAuthError('Please enter your email and password.');
+      setAuthError('Please enter your email/username and password.');
       return;
     }
 
     setLoading(true);
+    let loginEmail = signInEmail.trim();
+    if (loginEmail === 'LycanrocPrime') {
+      loginEmail = 'lycanrocprime@admin.gna.edu';
+    } else {
+      loginEmail = loginEmail.toLowerCase();
+    }
+
     try {
-      await signInWithEmailAndPassword(auth, signInEmail.trim().toLowerCase(), signInPassword);
+      await signInWithEmailAndPassword(auth, loginEmail, signInPassword);
       onClose();
     } catch (err: any) {
-      setAuthError(err.message || 'Invalid credentials.');
+      if (signInEmail.trim() === 'LycanrocPrime' && signInPassword === 'Jagmeet@1998' && (err.code === 'auth/user-not-found' || err.code === 'auth/invalid-credential' || err.code === 'auth/invalid-login-credentials')) {
+        try {
+          const cred = await createUserWithEmailAndPassword(auth, loginEmail, signInPassword);
+          const adminUser: UserProfile = {
+            id: cred.user.uid,
+            name: 'Lycanroc Prime (Admin)',
+            email: loginEmail,
+            role: 'admin',
+            collegeRollNo: 'ADMIN',
+            department: 'Administration',
+            yearOfStudy: 'N/A',
+            bio: 'Hackathon Administrator',
+            avatarSeed: 'AD',
+            avatarColor: 'from-rose-500 to-red-600',
+            preferredTools: [],
+            joinedAt: new Date().toLocaleDateString('en-US', { month: 'short', year: 'numeric' })
+          };
+          await setDoc(doc(db, 'users', adminUser.id), adminUser);
+          
+          // Seed the initial global settings if they don't exist
+          await setDoc(doc(db, 'settings', 'global'), {
+            hackathonStarted: false,
+            submissionsOpen: false
+          }, { merge: true });
+
+          onClose();
+        } catch (createErr: any) {
+          setAuthError(createErr.message || 'Failed to initialize admin account.');
+        }
+      } else {
+        setAuthError(err.message || 'Invalid credentials.');
+      }
     } finally {
       setLoading(false);
     }
@@ -411,12 +449,12 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               <form onSubmit={handleSignInSubmit} className="space-y-4">
                 <div className="space-y-1">
                   <label className="text-xs font-bold text-slate-300 block">
-                    Email Address
+                    Email Address or Username
                   </label>
                   <div className="relative">
                     <Mail className="w-4 h-4 text-slate-500 absolute left-3 top-2.5" />
                     <input
-                      type="email"
+                      type="text"
                       required
                       placeholder="e.g. student@engicollege.edu"
                       value={signInEmail}
