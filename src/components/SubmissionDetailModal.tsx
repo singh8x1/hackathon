@@ -112,7 +112,7 @@ export const SubmissionDetailModal: React.FC<SubmissionDetailModalProps> = ({
               }`}
             >
               <BarChart3 className="w-3.5 h-3.5" />
-              <span>Judges Scores ({submission.scores.length})</span>
+              <span>Admin Evaluation ({submission.scores.length})</span>
             </button>
           </div>
 
@@ -125,7 +125,7 @@ export const SubmissionDetailModal: React.FC<SubmissionDetailModalProps> = ({
               className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs transition-colors cursor-pointer"
             >
               <Award className="w-3.5 h-3.5" />
-              <span>Score in Judges Portal</span>
+              <span>Score in Admin Portal</span>
             </button>
           </div>
         </div>
@@ -334,7 +334,7 @@ export const SubmissionDetailModal: React.FC<SubmissionDetailModalProps> = ({
                     <span className="text-3xl font-black text-white font-mono">{submission.averageScore.toFixed(1)}</span>
                     <span className="text-xs text-slate-400">/ 100 average</span>
                   </div>
-                  <p className="text-xs text-slate-400">Evaluated by {submission.scores.length} judging panel members</p>
+                  <p className="text-xs text-slate-400">Evaluated by Admin</p>
                 </div>
 
                 {submission.specialBadges && submission.specialBadges.length > 0 && (
@@ -380,22 +380,18 @@ export const SubmissionDetailModal: React.FC<SubmissionDetailModalProps> = ({
                       </div>
 
                       {/* Rubric Breakdown Grid */}
-                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs">
                         <div className="p-2 rounded-lg bg-slate-900 border border-slate-800/80">
-                          <span className="text-[10px] text-slate-400 block">Insight Depth</span>
-                          <span className="font-bold text-white font-mono">{score.insightScore} / 25</span>
+                          <span className="text-[10px] text-slate-400 block">Q1 Score</span>
+                          <span className="font-bold text-white font-mono">{score.question1Score} / 33</span>
                         </div>
                         <div className="p-2 rounded-lg bg-slate-900 border border-slate-800/80">
-                          <span className="text-[10px] text-slate-400 block">Visual Design</span>
-                          <span className="font-bold text-white font-mono">{score.visualDesignScore} / 25</span>
+                          <span className="text-[10px] text-slate-400 block">Q2 Score</span>
+                          <span className="font-bold text-white font-mono">{score.question2Score} / 33</span>
                         </div>
                         <div className="p-2 rounded-lg bg-slate-900 border border-slate-800/80">
-                          <span className="text-[10px] text-slate-400 block">Technical Python</span>
-                          <span className="font-bold text-white font-mono">{score.technicalScore} / 25</span>
-                        </div>
-                        <div className="p-2 rounded-lg bg-slate-900 border border-slate-800/80">
-                          <span className="text-[10px] text-slate-400 block">Storytelling</span>
-                          <span className="font-bold text-white font-mono">{score.storytellingScore} / 25</span>
+                          <span className="text-[10px] text-slate-400 block">Q3 Score</span>
+                          <span className="font-bold text-white font-mono">{score.question3Score} / 34</span>
                         </div>
                       </div>
 

@@ -26,18 +26,7 @@ interface JudgesPortalProps {
   onInspectSubmission: (sub: Submission) => void;
 }
 
-interface JudgeProfile {
-  id: string;
-  name: string;
-  role: string;
-}
-
-const PANEL_JUDGES: JudgeProfile[] = [
-  { id: 'j-01', name: 'Dr. Vikram Malhotra', role: 'Head of Dept (Computer Engineering)' },
-  { id: 'j-02', name: 'Dr. Anita Joshi', role: 'Associate Professor & Data Science Chair' },
-  { id: 'j-03', name: 'Tanvi Shah', role: 'Lead BI Architect @ CloudScale Solutions' },
-  { id: 'j-custom', name: 'Prof. Guest Judge', role: 'Engineering Day Evaluation Panelist' }
-];
+const ADMIN_JUDGE = { id: 'admin', name: 'Administrator', role: 'Platform Admin' };
 
 export const JudgesPortal: React.FC<JudgesPortalProps> = ({
   submissions,
@@ -49,15 +38,12 @@ export const JudgesPortal: React.FC<JudgesPortalProps> = ({
     selectedSubmissionId || (submissions[0]?.id ?? '')
   );
 
-  // Active Judge
-  const [activeJudge, setActiveJudge] = useState<JudgeProfile>(PANEL_JUDGES[0]);
+
 
   // Rubric Sliders (0 - 25 each, totaling 100)
-  const [insightScore, setInsightScore] = useState<number>(23);
-  const [visualDesignScore, setVisualDesignScore] = useState<number>(24);
-  const [technicalScore, setTechnicalScore] = useState<number>(23);
-  const [storytellingScore, setStorytellingScore] = useState<number>(22);
-  
+  const [question1Score, setQuestion1Score] = useState<number>(23);
+  const [question2Score, setQuestion2Score] = useState<number>(24);
+  const [question3Score, setQuestion3Score] = useState<number>(23);
   // Feedback and awards
   const [comments, setComments] = useState<string>('');
   const [selectedAwards, setSelectedAwards] = useState<string[]>([]);
@@ -75,26 +61,23 @@ export const JudgesPortal: React.FC<JudgesPortalProps> = ({
   // Pre-load existing judge score if this judge has already reviewed
   useEffect(() => {
     if (!currentSubmission) return;
-    const existing = currentSubmission.scores.find(s => s.judgeId === activeJudge.id);
+    const existing = currentSubmission.scores.find(s => s.judgeId === ADMIN_JUDGE.id);
     if (existing) {
-      setInsightScore(existing.insightScore);
-      setVisualDesignScore(existing.visualDesignScore);
-      setTechnicalScore(existing.technicalScore);
-      setStorytellingScore(existing.storytellingScore);
+      setQuestion1Score(existing.question1Score);
+      setQuestion2Score(existing.question2Score);
+      setQuestion3Score(existing.question3Score);
       setComments(existing.comments);
       setSelectedAwards(existing.specialAwards || []);
     } else {
-      // Default recommended balanced values
-      setInsightScore(22);
-      setVisualDesignScore(23);
-      setTechnicalScore(22);
-      setStorytellingScore(22);
+      setQuestion1Score(22);
+      setQuestion2Score(23);
+      setQuestion3Score(23);
       setComments('');
       setSelectedAwards([]);
     }
-  }, [currentSubmission?.id, activeJudge.id]);
+  }, [currentSubmission?.id, ADMIN_JUDGE.id]);
 
-  const totalScore = insightScore + visualDesignScore + technicalScore + storytellingScore;
+  const totalScore = question1Score + question2Score + question3Score;
 
   const toggleAward = (award: string) => {
     if (selectedAwards.includes(award)) {
@@ -117,10 +100,10 @@ export const JudgesPortal: React.FC<JudgesPortalProps> = ({
     setComments(suggestedNote);
     
     // Suggest balanced high-merit scores
-    setInsightScore(23);
-    setVisualDesignScore(24);
-    setTechnicalScore(23);
-    setStorytellingScore(23);
+    setQuestion1Score(23);
+    setQuestion2Score(24);
+    setQuestion3Score(24);
+    
   };
 
   const handleSubmitScore = (e: React.FormEvent) => {
@@ -128,13 +111,12 @@ export const JudgesPortal: React.FC<JudgesPortalProps> = ({
     if (!currentSubmission) return;
 
     const newScore: JudgeScore = {
-      judgeId: activeJudge.id,
-      judgeName: activeJudge.name,
-      judgeRole: activeJudge.role,
-      insightScore,
-      visualDesignScore,
-      technicalScore,
-      storytellingScore,
+      judgeId: ADMIN_JUDGE.id,
+      judgeName: ADMIN_JUDGE.name,
+      judgeRole: ADMIN_JUDGE.role,
+      question1Score,
+      question2Score,
+      question3Score,
       totalScore,
       comments: comments.trim() || 'Thorough evaluation completed. High quality data visualization.',
       specialAwards: selectedAwards,
@@ -174,31 +156,18 @@ export const JudgesPortal: React.FC<JudgesPortalProps> = ({
             Faculty &amp; Industry Review Chamber
           </div>
           <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
-            Judges Scoring &amp; Rating Portal
+            Admin Scoring &amp; Rating Portal
           </h2>
           <p className="text-sm text-slate-400 mt-1 max-w-2xl">
-            Evaluate engineering day submissions across 4 standardized rubric categories (25 pts each, 100 max). Ratings immediately influence the live leaderboard.
+            Evaluate engineering day submissions across 3 standardized rubric questions (max 100).. Ratings immediately influence the live leaderboard.
           </p>
         </div>
 
-        {/* Judge Profile Selector */}
-        <div className="flex items-center gap-2 bg-slate-900 p-1.5 rounded-xl border border-slate-800">
-          <User className="w-4 h-4 text-indigo-400 ml-2" />
-          <span className="text-xs text-slate-400 font-semibold">Active Judge:</span>
-          <select
-            value={activeJudge.id}
-            onChange={(e) => {
-              const j = PANEL_JUDGES.find(pj => pj.id === e.target.value) || PANEL_JUDGES[0];
-              setActiveJudge(j);
-            }}
-            className="px-2.5 py-1 rounded-lg bg-slate-950 text-white text-xs font-bold border border-slate-800 focus:outline-none cursor-pointer"
-          >
-            {PANEL_JUDGES.map((j) => (
-              <option key={j.id} value={j.id}>
-                {j.name} ({j.role.split(' ')[0]})
-              </option>
-            ))}
-          </select>
+        {/* Admin Indicator */}
+        <div className="flex items-center gap-2 bg-slate-900 px-3 py-2 rounded-xl border border-slate-800">
+          <User className="w-4 h-4 text-indigo-400" />
+          <span className="text-xs text-slate-400 font-semibold">Evaluator:</span>
+          <span className="text-xs font-bold text-white">Administrator</span>
         </div>
       </div>
 
@@ -230,7 +199,7 @@ export const JudgesPortal: React.FC<JudgesPortalProps> = ({
           <div className="space-y-2 max-h-[620px] overflow-y-auto pr-1">
             {submissions.map((sub) => {
               const isSelected = sub.id === activeSubmissionId;
-              const hasJudged = sub.scores.some(s => s.judgeId === activeJudge.id);
+              const hasJudged = sub.scores.some(s => s.judgeId === ADMIN_JUDGE.id);
               return (
                 <div
                   key={sub.id}
@@ -366,127 +335,96 @@ export const JudgesPortal: React.FC<JudgesPortalProps> = ({
               {/* 4 Rubric Sliders */}
               <div className="space-y-5">
                 
-                {/* 1. Insight Depth */}
+                {/* 1. Data Accuracy & Engineering Complexity */}
                 <div className="space-y-2 p-3.5 rounded-xl bg-slate-950/60 border border-slate-800/80">
                   <div className="flex items-center justify-between">
                     <div>
                       <span className="text-xs font-bold text-white">
-                        1. Insight Depth &amp; Analytical Rigor
+                        1. Data Accuracy &amp; Engineering Complexity
                       </span>
                       <p className="text-[11px] text-slate-400">
                         Statistical depth, novelty of engineering insights, answering dataset core challenges.
                       </p>
                     </div>
                     <span className="text-sm font-black text-indigo-400 font-mono px-2 py-0.5 rounded bg-indigo-950/60 border border-indigo-500/30">
-                      {insightScore} / 25
+                      {question1Score} / 33
                     </span>
                   </div>
                   <input
                     type="range"
                     min={0}
-                    max={25}
-                    value={insightScore}
-                    onChange={(e) => setInsightScore(Number(e.target.value))}
+                    max={33}
+                    value={question1Score}
+                    onChange={(e) => setQuestion1Score(Number(e.target.value))}
                     className="w-full accent-indigo-500 cursor-pointer"
                   />
                   <div className="flex justify-between text-[10px] text-slate-500 font-mono">
                     <span>0 (Shallow)</span>
-                    <span>12 (Average)</span>
-                    <span>18 (Proficient)</span>
-                    <span>25 (Publication Quality)</span>
+                    <span>16 (Average)</span>
+                    <span>24 (Proficient)</span>
+                    <span>33 (Publication Quality)</span>
                   </div>
                 </div>
 
-                {/* 2. Visual Design & Creative Aesthetics */}
+                {/* 2. Visual Design & Interactivity */}
                 <div className="space-y-2 p-3.5 rounded-xl bg-slate-950/60 border border-slate-800/80">
                   <div className="flex items-center justify-between">
                     <div>
                       <span className="text-xs font-bold text-white">
-                        2. Visual Design &amp; Creative Aesthetics
+                        2. Visual Design &amp; Interactivity
                       </span>
                       <p className="text-[11px] text-slate-400">
-                        Color harmony, typography, whitespace, aspect ratio, clean legends, zero clutter.
+                        Color harmony, typography, aspect ratio, clean legends, and interactive elements.
                       </p>
                     </div>
                     <span className="text-sm font-black text-purple-400 font-mono px-2 py-0.5 rounded bg-purple-950/60 border border-purple-500/30">
-                      {visualDesignScore} / 25
+                      {question2Score} / 33
                     </span>
                   </div>
                   <input
                     type="range"
                     min={0}
-                    max={25}
-                    value={visualDesignScore}
-                    onChange={(e) => setVisualDesignScore(Number(e.target.value))}
+                    max={33}
+                    value={question2Score}
+                    onChange={(e) => setQuestion2Score(Number(e.target.value))}
                     className="w-full accent-purple-500 cursor-pointer"
                   />
                   <div className="flex justify-between text-[10px] text-slate-500 font-mono">
                     <span>0 (Unstyled)</span>
-                    <span>12 (Basic Plot)</span>
-                    <span>18 (Polished)</span>
-                    <span>25 (Masterpiece)</span>
+                    <span>16 (Basic Plot)</span>
+                    <span>24 (Polished)</span>
+                    <span>33 (Masterpiece)</span>
                   </div>
                 </div>
 
-                {/* 3. Technical Execution & Python Mastery */}
+                {/* 3. Analytical Insights & Storytelling */}
                 <div className="space-y-2 p-3.5 rounded-xl bg-slate-950/60 border border-slate-800/80">
                   <div className="flex items-center justify-between">
                     <div>
                       <span className="text-xs font-bold text-white">
-                        3. Technical Execution &amp; Tool Mastery
+                        3. Analytical Insights &amp; Storytelling
                       </span>
                       <p className="text-[11px] text-slate-400">
-                        Effective use of Matplotlib / Seaborn / Plotly code, or Power BI / Tableau DAX modeling.
-                      </p>
-                    </div>
-                    <span className="text-sm font-black text-sky-400 font-mono px-2 py-0.5 rounded bg-sky-950/60 border border-sky-500/30">
-                      {technicalScore} / 25
-                    </span>
-                  </div>
-                  <input
-                    type="range"
-                    min={0}
-                    max={25}
-                    value={technicalScore}
-                    onChange={(e) => setTechnicalScore(Number(e.target.value))}
-                    className="w-full accent-sky-500 cursor-pointer"
-                  />
-                  <div className="flex justify-between text-[10px] text-slate-500 font-mono">
-                    <span>0 (Broken)</span>
-                    <span>12 (Template Copy)</span>
-                    <span>18 (Solid Code)</span>
-                    <span>25 (Advanced Custom)</span>
-                  </div>
-                </div>
-
-                {/* 4. Storytelling & Clarity */}
-                <div className="space-y-2 p-3.5 rounded-xl bg-slate-950/60 border border-slate-800/80">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <span className="text-xs font-bold text-white">
-                        4. Storytelling, Clarity &amp; Impact
-                      </span>
-                      <p className="text-[11px] text-slate-400">
-                        Explaining takeaways clearly, insightful annotations, actionable engineering relevance.
+                        Explaining takeaways clearly, actionable engineering relevance, and impact.
                       </p>
                     </div>
                     <span className="text-sm font-black text-emerald-400 font-mono px-2 py-0.5 rounded bg-emerald-950/60 border border-emerald-500/30">
-                      {storytellingScore} / 25
+                      {question3Score} / 34
                     </span>
                   </div>
                   <input
                     type="range"
                     min={0}
-                    max={25}
-                    value={storytellingScore}
-                    onChange={(e) => setStorytellingScore(Number(e.target.value))}
+                    max={34}
+                    value={question3Score}
+                    onChange={(e) => setQuestion3Score(Number(e.target.value))}
                     className="w-full accent-emerald-500 cursor-pointer"
                   />
                   <div className="flex justify-between text-[10px] text-slate-500 font-mono">
                     <span>0 (Unclear)</span>
-                    <span>12 (Understood)</span>
-                    <span>18 (Compelling)</span>
-                    <span>25 (Executive Story)</span>
+                    <span>16 (Understood)</span>
+                    <span>25 (Compelling)</span>
+                    <span>34 (Executive Story)</span>
                   </div>
                 </div>
 
@@ -547,7 +485,7 @@ export const JudgesPortal: React.FC<JudgesPortalProps> = ({
               {/* Submit Review Action */}
               <div className="pt-4 border-t border-slate-800 flex items-center justify-between">
                 <div className="text-xs text-slate-400">
-                  Reviewing as: <strong className="text-white">{activeJudge.name}</strong>
+                  Reviewing as: <strong className="text-white">{ADMIN_JUDGE.name}</strong>
                 </div>
 
                 <button

@@ -28,10 +28,9 @@ export interface JudgeScore {
   judgeId: string;
   judgeName: string;
   judgeRole: string; // e.g., 'Head of Dept (CSE)', 'Senior Data Scientist @ TechCorp'
-  insightScore: number; // max 25
-  visualDesignScore: number; // max 25
-  technicalScore: number; // max 25
-  storytellingScore: number; // max 25
+  question1Score: number; // max 33
+  question2Score: number; // max 33
+  question3Score: number; // max 34
   totalScore: number; // max 100
   comments: string;
   specialAwards?: string[];
