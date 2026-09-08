@@ -20,8 +20,8 @@ export default function App() {
   const [currentUser, setCurrentUser] = useState<UserProfile | null>(null);
   const [submissions, setSubmissions] = useState<Submission[]>([]);
   const [hackathonState, setHackathonState] = useState<HackathonState>({
-    hackathonStarted: false,
-    submissionsOpen: false
+    hackathonStarted: true,
+    submissionsOpen: true
   });
 
   // Current active navigation tab

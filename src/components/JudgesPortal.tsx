@@ -145,6 +145,16 @@ export const JudgesPortal: React.FC<JudgesPortalProps> = ({
     'Best Matplotlib Art'
   ];
 
+  if (submissions.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center py-20 text-slate-400">
+        <BarChart3 className="w-12 h-12 mb-4 text-slate-600" />
+        <h2 className="text-xl font-bold text-white mb-2">No Submissions Yet</h2>
+        <p>Waiting for students to submit their projects.</p>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-8">
       

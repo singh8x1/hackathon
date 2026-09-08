@@ -1,5 +1,5 @@
 import React from 'react';
-import { doc, updateDoc } from 'firebase/firestore';
+import { doc, setDoc } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import { HackathonState, UserProfile } from '../types';
 import { Settings, PlayCircle, StopCircle, Lock, Unlock, Users, ShieldAlert } from 'lucide-react';
@@ -22,9 +22,9 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ hackathonState, curren
 
   const toggleHackathon = async () => {
     try {
-      await updateDoc(doc(db, 'settings', 'global'), {
+      await setDoc(doc(db, 'settings', 'global'), {
         hackathonStarted: !hackathonState.hackathonStarted
-      });
+      }, { merge: true });
     } catch (e) {
       console.error('Failed to toggle hackathon state', e);
       alert('Failed to update state.');
@@ -33,9 +33,9 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ hackathonState, curren
 
   const toggleSubmissions = async () => {
     try {
-      await updateDoc(doc(db, 'settings', 'global'), {
+      await setDoc(doc(db, 'settings', 'global'), {
         submissionsOpen: !hackathonState.submissionsOpen
-      });
+      }, { merge: true });
     } catch (e) {
       console.error('Failed to toggle submissions state', e);
       alert('Failed to update state.');

@@ -111,8 +111,8 @@ plt.show()`);
       setErrorMsg('Please upload visualization image in PNG or JPG format.');
       return;
     }
-    if (file.size > 800 * 1024) {
-      setErrorMsg('File is too large! Please keep the image under 800KB for the cloud database.');
+    if (file.size > 400 * 1024) {
+      setErrorMsg('File is too large! Please keep the image under 400KB for the cloud database.');
       return;
     }
     setErrorMsg(null);
