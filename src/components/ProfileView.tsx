@@ -557,7 +557,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
             <div className="space-y-1 max-w-md mx-auto">
               <h4 className="text-sm font-bold text-white">No submissions uploaded yet</h4>
               <p className="text-xs text-slate-400">
-                You haven't submitted any visualization for Engineering Day yet! Choose one of the 5 curated Kaggle datasets, create your charts using Python or modern BI tools, and submit before 03:30 PM.
+                You haven't submitted any visualization for Engineering Day yet! Choose one of the curated Kaggle datasets, create your charts using Python or modern BI tools, and submit before 03:30 PM.
               </p>
             </div>
             <div className="flex justify-center gap-3 pt-2">

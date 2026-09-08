@@ -1,8 +1,13 @@
 import React, { useState } from 'react';
 import { Dataset } from '../types';
 import { KAGGLE_DATASETS } from '../data/datasets';
-import { 
-  Database, 
+import {   Database,
+  ShoppingCart,
+  Music,
+  MapPin,
+  Film,
+  Briefcase,
+  Globe, 
   ExternalLink, 
   Code2, 
   Copy, 
@@ -37,11 +42,13 @@ export const DatasetExplorer: React.FC<DatasetExplorerProps> = ({
 
   const getIcon = (iconName: string) => {
     switch (iconName) {
-      case 'Zap': return Zap;
-      case 'GraduationCap': return GraduationCap;
+      case 'ShoppingCart': return ShoppingCart;
+      case 'Music': return Music;
+      case 'MapPin': return MapPin;
+      case 'Film': return Film;
+      case 'Briefcase': return Briefcase;
+      case 'Globe': return Globe;
       case 'Sun': return Sun;
-      case 'Rocket': return Rocket;
-      case 'Activity': return Activity;
       default: return Database;
     }
   };
@@ -86,7 +93,7 @@ export const DatasetExplorer: React.FC<DatasetExplorerProps> = ({
             Select Your Challenge Dataset
           </h2>
           <p className="text-sm text-slate-400 mt-1 max-w-2xl">
-            Choose from 5 industry-grade engineering datasets. Every dataset includes pre-tested Python visualization starters for <strong className="text-indigo-300">Matplotlib</strong>, <strong className="text-sky-300">Seaborn</strong>, and <strong className="text-emerald-300">Plotly</strong>.
+            Choose from 7 diverse real-world datasets. Every dataset includes pre-tested Python visualization starters for <strong className="text-indigo-300">Matplotlib</strong>, <strong className="text-sky-300">Seaborn</strong>, and <strong className="text-emerald-300">Plotly</strong>.
           </p>
         </div>
 
@@ -97,7 +104,7 @@ export const DatasetExplorer: React.FC<DatasetExplorerProps> = ({
       </div>
 
       {/* Dataset Picker Cards (Grid of 5) */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
         {KAGGLE_DATASETS.map((ds) => {
           const Icon = getIcon(ds.iconName);
           const isSelected = ds.id === selectedDatasetId;
