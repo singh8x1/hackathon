@@ -13,22 +13,27 @@ export const KAGGLE_DATASETS: Dataset[] = [
     badgeColor: 'emerald',
     iconName: 'Zap',
     columns: [
-      { name: 'VIN_1_10', type: 'string', desc: 'Vehicle Identification Number prefix' },
-      { name: 'Model_Year', type: 'integer', desc: 'Manufacturing year (2011–2024)' },
-      { name: 'Make', type: 'string', desc: 'Manufacturer (Tesla, Nissan, Hyundai, BMW)' },
-      { name: 'Model', type: 'string', desc: 'Vehicle Model (Model 3, Leaf, Ioniq 5)' },
-      { name: 'Electric_Range', type: 'integer', desc: 'Certified electric range in miles' },
-      { name: 'Battery_KWh', type: 'float', desc: 'Battery pack usable capacity (kWh)' },
-      { name: 'Fast_Charge_KW', type: 'float', desc: 'Peak DC fast charging speed (kW)' },
-      { name: 'Base_MSRP', type: 'integer', desc: 'Base manufacturer retail price' },
-      { name: 'Electric_Vehicle_Type', type: 'string', desc: 'BEV (Battery Electric) or PHEV' }
+      { name: 'VIN (1-10)', type: 'string', desc: 'The first 10 characters of the Vehicle Identification Number' },
+      { name: 'County', type: 'string', desc: 'The geographic region of a state where the vehicle\'s owner is listed to reside' },
+      { name: 'City', type: 'string', desc: 'The city in which the registered owner resides' },
+      { name: 'State', type: 'string', desc: 'The geographic region of the country associated with the record' },
+      { name: 'Postal Code', type: 'integer', desc: 'The 5-digit zip code where the registered owner resides' },
+      { name: 'Model Year', type: 'integer', desc: 'The manufacturing year of the vehicle' },
+      { name: 'Make', type: 'string', desc: 'The manufacturer or brand of the vehicle' },
+      { name: 'Model', type: 'string', desc: 'The specific model of the vehicle' },
+      { name: 'Electric Vehicle Type', type: 'string', desc: 'Indicates whether the vehicle is a Battery Electric Vehicle (BEV) or a Plug-in Hybrid Electric Vehicle (PHEV)' },
+      { name: 'Clean Alternative Fuel Vehicle (CAFV) Eligibility', type: 'string', desc: 'Text describing the vehicle\'s eligibility for CAFV incentives' },
+      { name: 'Electric Range', type: 'integer', desc: 'The electric range of the vehicle in miles' },
+      { name: 'Base MSRP', type: 'integer', desc: 'The Manufacturer\'s Suggested Retail Price of the vehicle' },
+      { name: 'Legislative District', type: 'integer', desc: 'The legislative district associated with the vehicle\'s registration' },
+      { name: 'DOL Vehicle ID', type: 'integer', desc: 'A unique identifier for the vehicle from the Department of Licensing' },
+      { name: 'Vehicle Location', type: 'string', desc: 'The precise location or address of the vehicle (POINT geometry)' },
+      { name: 'Electric Utility', type: 'string', desc: 'The electric utility company that services the vehicles' },
+      { name: '2020 Census Tract', type: 'integer', desc: 'The 2020 Census Tract associated with the vehicle\'s location' }
     ],
     sampleRows: [
-      { VIN_1_10: '5YJ3E1EB4K', Model_Year: 2022, Make: 'Tesla', Model: 'Model 3', Electric_Range: 315, Battery_KWh: 75.0, Fast_Charge_KW: 250, Base_MSRP: 46990, Electric_Vehicle_Type: 'BEV' },
-      { VIN_1_10: '1N4AZ0CP8D', Model_Year: 2019, Make: 'Nissan', Model: 'Leaf', Electric_Range: 150, Battery_KWh: 40.0, Fast_Charge_KW: 50, Base_MSRP: 29990, Electric_Vehicle_Type: 'BEV' },
-      { VIN_1_10: 'KM8K12AA7N', Model_Year: 2023, Make: 'Hyundai', Model: 'Ioniq 5', Electric_Range: 303, Battery_KWh: 77.4, Fast_Charge_KW: 350, Base_MSRP: 41450, Electric_Vehicle_Type: 'BEV' },
-      { VIN_1_10: 'WA1V2AF28M', Model_Year: 2021, Make: 'Audi', Model: 'e-tron', Electric_Range: 222, Battery_KWh: 95.0, Fast_Charge_KW: 150, Base_MSRP: 65900, Electric_Vehicle_Type: 'BEV' },
-      { VIN_1_10: '1FTVW1EV4N', Model_Year: 2023, Make: 'Ford', Model: 'F-150 Lightning', Electric_Range: 320, Battery_KWh: 131.0, Fast_Charge_KW: 155, Base_MSRP: 55974, Electric_Vehicle_Type: 'BEV' }
+      { 'VIN (1-10)': '5YJ3E1EB4K', 'County': 'King', 'City': 'Seattle', 'State': 'WA', 'Postal Code': 98115, 'Model Year': 2019, 'Make': 'TESLA', 'Model': 'MODEL 3', 'Electric Vehicle Type': 'Battery Electric Vehicle (BEV)', 'Clean Alternative Fuel Vehicle (CAFV) Eligibility': 'Clean Alternative Fuel Vehicle Eligible', 'Electric Range': 220, 'Base MSRP': 0, 'Legislative District': 46, 'DOL Vehicle ID': 255476329, 'Vehicle Location': 'POINT (-122.3185 47.67949)', 'Electric Utility': 'CITY OF SEATTLE - (WA)|CITY OF TACOMA - (WA)', '2020 Census Tract': 53033004301 },
+      { 'VIN (1-10)': '1N4AZ0CP8D', 'County': 'Snohomish', 'City': 'Bothell', 'State': 'WA', 'Postal Code': 98021, 'Model Year': 2013, 'Make': 'NISSAN', 'Model': 'LEAF', 'Electric Vehicle Type': 'Battery Electric Vehicle (BEV)', 'Clean Alternative Fuel Vehicle (CAFV) Eligibility': 'Clean Alternative Fuel Vehicle Eligible', 'Electric Range': 75, 'Base MSRP': 0, 'Legislative District': 1, 'DOL Vehicle ID': 187654321, 'Vehicle Location': 'POINT (-122.18384 47.8031)', 'Electric Utility': 'PUGET SOUND ENERGY INC', '2020 Census Tract': 53061051918 }
     ],
     suggestedQuestions: [
       'How has median electric range evolved from 2012 to 2024 across BEVs vs PHEVs?',
@@ -156,21 +161,26 @@ fig.show()`
     badgeColor: 'indigo',
     iconName: 'GraduationCap',
     columns: [
-      { name: 'Student_ID', type: 'string', desc: 'College student enrollment identifier' },
-      { name: 'Branch', type: 'string', desc: 'CSE, ECE, Mechanical, Civil, AI-DS' },
-      { name: 'CGPA', type: 'float', desc: 'Graduation cumulative GPA (0.00 - 10.00)' },
-      { name: 'Coding_Score', type: 'integer', desc: 'Standardized DSA assessment score (0 - 100)' },
-      { name: 'Internships', type: 'integer', desc: 'Number of technical internships completed' },
-      { name: 'Hackathons_Won', type: 'integer', desc: 'Hackathon podium finishes / prizes won' },
-      { name: 'Placement_Status', type: 'string', desc: 'Placed or Unplaced' },
-      { name: 'Salary_LPA', type: 'float', desc: 'Annual Cost-to-Company offer in LPA (Lakhs/yr)' }
+      { name: 'sl_no', type: 'integer', desc: 'Serial number assigned to each entry' },
+      { name: 'gender', type: 'string', desc: 'Gender of the student (M/F)' },
+      { name: 'ssc_p', type: 'float', desc: 'Percentage in secondary education (10th Grade)' },
+      { name: 'ssc_b', type: 'string', desc: 'Board of education for secondary school (Central/Others)' },
+      { name: 'hsc_p', type: 'float', desc: 'Percentage in higher secondary education (12th Grade)' },
+      { name: 'hsc_b', type: 'string', desc: 'Board of education for higher secondary school (Central/Others)' },
+      { name: 'hsc_s', type: 'string', desc: 'Specialization in higher secondary education (Commerce/Science/Arts)' },
+      { name: 'degree_p', type: 'float', desc: 'Undergraduate degree percentage' },
+      { name: 'degree_t', type: 'string', desc: 'Type of undergraduate degree (Comm&Mgmt/Sci&Tech/Others)' },
+      { name: 'workex', type: 'string', desc: 'Work experience (Yes/No)' },
+      { name: 'etest_p', type: 'float', desc: 'Employability test percentage' },
+      { name: 'specialisation', type: 'string', desc: 'MBA specialization (Mkt&Fin/Mkt&HR)' },
+      { name: 'mba_p', type: 'float', desc: 'MBA percentage' },
+      { name: 'status', type: 'string', desc: 'Placement status (Placed/Not Placed)' },
+      { name: 'salary', type: 'float', desc: 'Salary offered after placement' }
     ],
     sampleRows: [
-      { Student_ID: 'EN202401', Branch: 'CSE', CGPA: 8.85, Coding_Score: 92, Internships: 2, Hackathons_Won: 3, Placement_Status: 'Placed', Salary_LPA: 18.5 },
-      { Student_ID: 'EN202402', Branch: 'AI-DS', CGPA: 9.12, Coding_Score: 96, Internships: 3, Hackathons_Won: 2, Placement_Status: 'Placed', Salary_LPA: 24.0 },
-      { Student_ID: 'EN202403', Branch: 'ECE', CGPA: 7.64, Coding_Score: 78, Internships: 1, Hackathons_Won: 1, Placement_Status: 'Placed', Salary_LPA: 9.2 },
-      { Student_ID: 'EN202404', Branch: 'Mechanical', CGPA: 8.10, Coding_Score: 68, Internships: 1, Hackathons_Won: 0, Placement_Status: 'Placed', Salary_LPA: 7.5 },
-      { Student_ID: 'EN202405', Branch: 'CSE', CGPA: 9.45, Coding_Score: 98, Internships: 3, Hackathons_Won: 4, Placement_Status: 'Placed', Salary_LPA: 32.0 }
+      { 'sl_no': 1, 'gender': 'M', 'ssc_p': 67.0, 'ssc_b': 'Others', 'hsc_p': 91.0, 'hsc_b': 'Others', 'hsc_s': 'Commerce', 'degree_p': 58.0, 'degree_t': 'Sci&Tech', 'workex': 'No', 'etest_p': 55.0, 'specialisation': 'Mkt&HR', 'mba_p': 58.8, 'status': 'Placed', 'salary': 270000.0 },
+      { 'sl_no': 2, 'gender': 'M', 'ssc_p': 79.33, 'ssc_b': 'Central', 'hsc_p': 78.33, 'hsc_b': 'Others', 'hsc_s': 'Science', 'degree_p': 77.48, 'degree_t': 'Sci&Tech', 'workex': 'Yes', 'etest_p': 86.5, 'specialisation': 'Mkt&Fin', 'mba_p': 66.28, 'status': 'Placed', 'salary': 200000.0 },
+      { 'sl_no': 3, 'gender': 'M', 'ssc_p': 65.0, 'ssc_b': 'Central', 'hsc_p': 68.0, 'hsc_b': 'Central', 'hsc_s': 'Arts', 'degree_p': 64.0, 'degree_t': 'Comm&Mgmt', 'workex': 'No', 'etest_p': 75.0, 'specialisation': 'Mkt&Fin', 'mba_p': 57.8, 'status': 'Placed', 'salary': 250000.0 }
     ],
     suggestedQuestions: [
       'What weighs more for tier-1 salary packages (>15 LPA): high CGPA or coding test percentiles?',
@@ -288,19 +298,19 @@ fig.show()`
     badgeColor: 'amber',
     iconName: 'Sun',
     columns: [
-      { name: 'Timestamp', type: 'datetime', desc: 'Hourly measurement date and time' },
-      { name: 'Solar_Gen_MW', type: 'float', desc: 'Solar PV power injection (Megawatts)' },
-      { name: 'Wind_Gen_MW', type: 'float', desc: 'Total wind turbine generation (MW)' },
-      { name: 'BESS_Charge_MW', type: 'float', desc: 'Grid battery storage charging rate' },
-      { name: 'BESS_Discharge_MW', type: 'float', desc: 'Battery discharge to meet peak load' },
-      { name: 'Grid_Demand_MW', type: 'float', desc: 'Total consumer load on grid' },
-      { name: 'Curtailed_Energy_MW', type: 'float', desc: 'Unused surplus renewable energy' },
-      { name: 'Carbon_Intensity_gCO2', type: 'float', desc: 'Grams of CO2 per kWh produced' }
+      { name: 'Entity', type: 'string', desc: 'Country or region for which data is reported' },
+      { name: 'Code', type: 'string', desc: 'Three-letter region code' },
+      { name: 'Year', type: 'integer', desc: 'Year (1965-2022)' },
+      { name: 'Renewables (% equivalent primary energy)', type: 'float', desc: 'Percentage of equivalent primary energy derived from renewables' },
+      { name: 'Electricity from Wind (TWh)', type: 'float', desc: 'Wind energy generation in Terawatt-hours' },
+      { name: 'Electricity from Hydro (TWh)', type: 'float', desc: 'Hydroelectric energy generation in Terawatt-hours' },
+      { name: 'Electricity from Solar (TWh)', type: 'float', desc: 'Solar energy generation in Terawatt-hours' },
+      { name: 'Other Renewables (TWh)', type: 'float', desc: 'Other renewable energy sources' }
     ],
     sampleRows: [
-      { Timestamp: '2024-06-15 12:00', Solar_Gen_MW: 4820.4, Wind_Gen_MW: 1840.1, BESS_Charge_MW: 950.0, BESS_Discharge_MW: 0.0, Grid_Demand_MW: 6200.0, Curtailed_Energy_MW: 120.5, Carbon_Intensity_gCO2: 85.2 },
-      { Timestamp: '2024-06-15 19:00', Solar_Gen_MW: 120.0, Wind_Gen_MW: 2950.8, BESS_Charge_MW: 0.0, BESS_Discharge_MW: 1200.0, Grid_Demand_MW: 7800.0, Curtailed_Energy_MW: 0.0, Carbon_Intensity_gCO2: 210.4 },
-      { Timestamp: '2024-06-15 03:00', Solar_Gen_MW: 0.0, Wind_Gen_MW: 3410.2, BESS_Charge_MW: 450.0, BESS_Discharge_MW: 0.0, Grid_Demand_MW: 4100.0, Curtailed_Energy_MW: 25.0, Carbon_Intensity_gCO2: 124.0 }
+      { 'Entity': 'United States', 'Code': 'USA', 'Year': 2021, 'Renewables (% equivalent primary energy)': 10.6, 'Electricity from Wind (TWh)': 382.8, 'Electricity from Hydro (TWh)': 260.2, 'Electricity from Solar (TWh)': 164.5, 'Other Renewables (TWh)': 77.4 },
+      { 'Entity': 'China', 'Code': 'CHN', 'Year': 2021, 'Renewables (% equivalent primary energy)': 15.6, 'Electricity from Wind (TWh)': 656.1, 'Electricity from Hydro (TWh)': 1300.0, 'Electricity from Solar (TWh)': 327.0, 'Other Renewables (TWh)': 111.4 },
+      { 'Entity': 'Germany', 'Code': 'DEU', 'Year': 2021, 'Renewables (% equivalent primary energy)': 20.3, 'Electricity from Wind (TWh)': 114.6, 'Electricity from Hydro (TWh)': 19.5, 'Electricity from Solar (TWh)': 50.0, 'Other Renewables (TWh)': 48.2 }
     ],
     suggestedQuestions: [
       'How does the infamous "Duck Curve" materialize during midday solar peak versus evening ramp?',
@@ -403,19 +413,20 @@ fig.show()`
     badgeColor: 'sky',
     iconName: 'Rocket',
     columns: [
-      { name: 'Company', type: 'string', desc: 'SpaceX, NASA, ISRO, Roscosmos, Arianespace' },
-      { name: 'Rocket_Name', type: 'string', desc: 'Falcon 9, PSLV, Soyuz, Saturn V, Ariane 5' },
-      { name: 'Launch_Year', type: 'integer', desc: 'Year of orbital launch (1957 - 2024)' },
-      { name: 'Status_Mission', type: 'string', desc: 'Success, Failure, Partial Failure' },
-      { name: 'Price_Million_USD', type: 'float', desc: 'Launch vehicle mission price ($M)' },
-      { name: 'Orbit', type: 'string', desc: 'LEO, GTO, Polar, Interplanetary, ISS' },
-      { name: 'Rocket_Status', type: 'string', desc: 'StatusActive or StatusRetired' }
+      { name: 'Unnamed: 0', type: 'integer', desc: 'Index column' },
+      { name: 'Company Name', type: 'string', desc: 'Space organization undertaking the mission' },
+      { name: 'Location', type: 'string', desc: 'Point of spacecraft launch on Earth' },
+      { name: 'Datum', type: 'string', desc: 'Date and time of liftoff' },
+      { name: 'Detail', type: 'string', desc: 'Name and type of the spaceship/rocket' },
+      { name: 'Status Rocket', type: 'string', desc: 'StatusActive or StatusRetired' },
+      { name: 'Rocket', type: 'float', desc: 'Cost of the mission in million $' },
+      { name: 'Status Mission', type: 'string', desc: 'Success, Failure, Partial Failure, Prelaunch Failure' }
     ],
     sampleRows: [
-      { Company: 'SpaceX', Rocket_Name: 'Falcon 9 Block 5', Launch_Year: 2023, Status_Mission: 'Success', Price_Million_USD: 67.0, Orbit: 'LEO', Rocket_Status: 'StatusActive' },
-      { Company: 'ISRO', Rocket_Name: 'LVM3 / Chandrayaan-3', Launch_Year: 2023, Status_Mission: 'Success', Price_Million_USD: 45.0, Orbit: 'Moon / TLIO', Rocket_Status: 'StatusActive' },
-      { Company: 'NASA', Rocket_Name: 'Saturn V', Launch_Year: 1969, Status_Mission: 'Success', Price_Million_USD: 185.0, Orbit: 'Lunar Orbit', Rocket_Status: 'StatusRetired' },
-      { Company: 'Arianespace', Rocket_Name: 'Ariane 5 ECA', Launch_Year: 2022, Status_Mission: 'Success', Price_Million_USD: 165.0, Orbit: 'GTO', Rocket_Status: 'StatusRetired' }
+      { 'Unnamed: 0': 0, 'Company Name': 'SpaceX', 'Location': 'LC-39A, Kennedy Space Center, Florida, USA', 'Datum': 'Fri Aug 07, 2020 05:12 UTC', 'Detail': 'Falcon 9 Block 5 | Starlink V1 L9 & BlackSky', 'Status Rocket': 'StatusActive', 'Rocket': 50.0, 'Status Mission': 'Success' },
+      { 'Unnamed: 0': 1, 'Company Name': 'CASC', 'Location': 'Site 9401 (SLS-2), Jiuquan Satellite Launch Center, China', 'Datum': 'Thu Aug 06, 2020 04:01 UTC', 'Detail': 'Long March 2D | Gaofen-9 04 & Q-SAT', 'Status Rocket': 'StatusActive', 'Rocket': 29.75, 'Status Mission': 'Success' },
+      { 'Unnamed: 0': 2, 'Company Name': 'Roscosmos', 'Location': 'Site 200/39, Baikonur Cosmodrome, Kazakhstan', 'Datum': 'Thu Jul 30, 2020 21:25 UTC', 'Detail': 'Proton-M/Briz-M | Ekspress-80 & Ekspress-103', 'Status Rocket': 'StatusActive', 'Rocket': 65.0, 'Status Mission': 'Success' },
+      { 'Unnamed: 0': 3, 'Company Name': 'ULA', 'Location': 'SLC-41, Cape Canaveral AFS, Florida, USA', 'Datum': 'Thu Jul 30, 2020 11:50 UTC', 'Detail': 'Atlas V 541 | Perseverance', 'Status Rocket': 'StatusActive', 'Rocket': 145.0, 'Status Mission': 'Success' }
     ],
     suggestedQuestions: [
       'How has reusable rocket booster architecture disrupted launch cost per kg to low Earth orbit?',
@@ -509,18 +520,19 @@ fig.show()`
     badgeColor: 'rose',
     iconName: 'Activity',
     columns: [
-      { name: 'Station_Code', type: 'string', desc: 'IoT Sensor node station ID' },
-      { name: 'District', type: 'string', desc: 'Urban district / campus zone' },
-      { name: 'PM2_5', type: 'float', desc: 'Fine particulate matter (<2.5 µm) in µg/m³' },
-      { name: 'PM10', type: 'float', desc: 'Coarse particulate matter in µg/m³' },
-      { name: 'NO2_ppm', type: 'float', desc: 'Nitrogen dioxide concentration in ppm' },
-      { name: 'Traffic_Index', type: 'integer', desc: 'Real-time vehicle density index (0 - 100)' },
-      { name: 'Wind_Speed_ms', type: 'float', desc: 'Anemometer wind speed in m/s' }
+      { name: 'Measurement date', type: 'string', desc: 'Hour of measurement' },
+      { name: 'Station code', type: 'integer', desc: 'Station ID to identify the measurement location' },
+      { name: 'Item code', type: 'integer', desc: 'Pollutant type code (e.g. SO2, NO2, CO, O3, PM10, PM2.5)' },
+      { name: 'Average value', type: 'float', desc: 'Concentration of the specific pollutant for that hour' },
+      { name: 'Instrument status', type: 'integer', desc: 'Operational status of the measuring instrument (0=normal)' }
     ],
     sampleRows: [
-      { Station_Code: 'IOT_101', District: 'Tech Zone', PM2_5: 38.5, PM10: 72.1, NO2_ppm: 0.042, Traffic_Index: 82, Wind_Speed_ms: 1.8 },
-      { Station_Code: 'IOT_102', District: 'Campus Green', PM2_5: 14.2, PM10: 28.0, NO2_ppm: 0.015, Traffic_Index: 24, Wind_Speed_ms: 3.4 },
-      { Station_Code: 'IOT_103', District: 'Industrial Blvd', PM2_5: 64.8, PM10: 118.5, NO2_ppm: 0.078, Traffic_Index: 94, Wind_Speed_ms: 0.9 }
+      { 'Measurement date': '2017-01-01 00:00', 'Station code': 101, 'Item code': 1, 'Average value': 0.004, 'Instrument status': 0 },
+      { 'Measurement date': '2017-01-01 00:00', 'Station code': 101, 'Item code': 3, 'Average value': 0.059, 'Instrument status': 0 },
+      { 'Measurement date': '2017-01-01 00:00', 'Station code': 101, 'Item code': 5, 'Average value': 1.2, 'Instrument status': 0 },
+      { 'Measurement date': '2017-01-01 00:00', 'Station code': 101, 'Item code': 6, 'Average value': 0.002, 'Instrument status': 0 },
+      { 'Measurement date': '2017-01-01 00:00', 'Station code': 101, 'Item code': 8, 'Average value': 73.0, 'Instrument status': 0 },
+      { 'Measurement date': '2017-01-01 00:00', 'Station code': 101, 'Item code': 9, 'Average value': 57.0, 'Instrument status': 0 }
     ],
     suggestedQuestions: [
       'What is the lag-time between morning peak traffic index and peak atmospheric PM2.5 levels?',
