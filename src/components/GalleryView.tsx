@@ -35,7 +35,9 @@ export const GalleryView: React.FC<GalleryViewProps> = ({
     if (searchTerm.trim()) {
       const q = searchTerm.toLowerCase();
       return sub.title.toLowerCase().includes(q) || 
-             sub.studentName.toLowerCase().includes(q) ||
+             sub.studentName.toLowerCase().includes(q) || 
+             (sub.teamName && sub.teamName.toLowerCase().includes(q)) || 
+             (sub.teamMembers && sub.teamMembers.some(m => m.toLowerCase().includes(q))) ||
              sub.department.toLowerCase().includes(q);
     }
     return true;
@@ -165,7 +167,13 @@ export const GalleryView: React.FC<GalleryViewProps> = ({
               {/* Card Footer */}
               <div className="pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs">
                 <div>
-                  <div className="font-semibold text-slate-200 text-xs">{sub.studentName}</div>
+                  {sub.teamName ? (
+                    <div className="font-semibold text-slate-200 text-xs">
+                      {sub.teamName} <span className="text-[9px] bg-indigo-500/20 text-indigo-300 px-1 py-0.5 rounded ml-0.5 uppercase">Team</span>
+                    </div>
+                  ) : (
+                    <div className="font-semibold text-slate-200 text-xs">{sub.studentName}</div>
+                  )}
                   <div className="text-[11px] text-slate-400">{sub.department}</div>
                 </div>
 

@@ -11,13 +11,14 @@ import { AuthModal } from './components/AuthModal';
 import { SubmissionFormModal } from './components/SubmissionFormModal';
 import { SubmissionDetailModal } from './components/SubmissionDetailModal';
 import { AdminPortal } from './components/AdminPortal';
-import { Submission, JudgeScore, UserProfile, HackathonState } from './types';
+import { Submission, JudgeScore, UserProfile, HackathonState , Team } from './types';
 import { auth, db } from './lib/firebase';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
-import { collection, doc, onSnapshot, getDoc, setDoc } from 'firebase/firestore';
+import { collection, doc, onSnapshot, getDoc, setDoc, query, where } from 'firebase/firestore';
 
 export default function App() {
   const [currentUser, setCurrentUser] = useState<UserProfile | null>(null);
+  const [currentTeam, setCurrentTeam] = useState<Team | null>(null);
   const [submissions, setSubmissions] = useState<Submission[]>([]);
   const [hackathonState, setHackathonState] = useState<HackathonState>({
     hackathonStarted: true,
@@ -60,6 +61,45 @@ export default function App() {
     });
     return () => unsubscribe();
   }, []);
+
+  // Sync Current Team
+  useEffect(() => {
+    if (!currentUser) {
+      setCurrentTeam(null);
+      return;
+    }
+    
+    let teamFound = false;
+
+    // Check where creator
+    const qCreator = query(collection(db, 'teams'), where('creatorId', '==', currentUser.id), where('status', '==', 'accepted'));
+    const unsubCreator = onSnapshot(qCreator, (snap) => {
+      if (!snap.empty) {
+        setCurrentTeam({ id: snap.docs[0].id, ...snap.docs[0].data() } as Team);
+        teamFound = true;
+      } else if (teamFound && currentTeam?.creatorId === currentUser.id) {
+        setCurrentTeam(null);
+        teamFound = false;
+      }
+    });
+
+    // Check where invited
+    const qInvited = query(collection(db, 'teams'), where('invitedRollNo', '==', currentUser.collegeRollNo), where('status', '==', 'accepted'));
+    const unsubInvited = onSnapshot(qInvited, (snap) => {
+      if (!snap.empty) {
+        setCurrentTeam({ id: snap.docs[0].id, ...snap.docs[0].data() } as Team);
+        teamFound = true;
+      } else if (teamFound && currentTeam?.invitedRollNo === currentUser.collegeRollNo) {
+        setCurrentTeam(null);
+        teamFound = false;
+      }
+    });
+
+    return () => {
+      unsubCreator();
+      unsubInvited();
+    };
+  }, [currentUser]);
 
   // Sync Hackathon State
   useEffect(() => {
@@ -289,12 +329,13 @@ export default function App() {
       </main>
 
       {/* Submission Form Modal */}
-      <SubmissionFormModal
+            <SubmissionFormModal
         isOpen={isSubmitModalOpen}
         onClose={() => setIsSubmitModalOpen(false)}
         onSubmitSuccess={handleNewSubmission}
         preSelectedDatasetId={preSelectedDatasetId}
         currentUser={currentUser}
+        currentTeam={currentTeam}
       />
 
       {/* Auth / Registration Modal */}

@@ -64,6 +64,8 @@ export interface Submission {
   userId?: string;
   title: string;
   studentName: string;
+  teamId?: string;
+  teamName?: string;
   teamMembers?: string[];
   collegeRollNo: string;
   department: string;
@@ -98,6 +100,19 @@ export interface Submission {
   averageScore: number;
   rank?: number;
   specialBadges?: string[];
+}
+
+export interface Team {
+  id: string;
+  name?: string;
+  creatorId: string;
+  creatorRollNo: string;
+  creatorName: string;
+  invitedRollNo: string;
+  invitedId?: string;
+  invitedName?: string;
+  status: 'pending' | 'accepted';
+  createdAt: string;
 }
 
 export interface PrizeItem {

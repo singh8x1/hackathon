@@ -3,9 +3,16 @@ import re
 with open("firestore.rules", "r") as f:
     content = f.read()
 
-# Make submissions readable by everyone, creatable by everyone, updateable by admin or owner
-# Actually, the easiest is to allow create: if true;
-content = content.replace("allow create: if request.auth != null;", "allow create: if true;")
+teams_rules = """
+    match /teams/{teamId} {
+      allow read: if true;
+      allow create: if request.auth != null;
+      allow update: if request.auth != null;
+      allow delete: if request.auth != null;
+    }
+    match /settings/{docId}"""
+
+content = content.replace("    match /settings/{docId}", teams_rules)
 
 with open("firestore.rules", "w") as f:
     f.write(content)

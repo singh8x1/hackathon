@@ -235,7 +235,7 @@ export const JudgesPortal: React.FC<JudgesPortalProps> = ({
                       {sub.title}
                     </h4>
                     <p className="text-[11px] text-slate-400 line-clamp-1">
-                      {sub.studentName} • {sub.department}
+                      {sub.teamName ? `${sub.teamName}` : sub.studentName} • {sub.department}
                     </p>
                   </div>
 
@@ -264,7 +264,11 @@ export const JudgesPortal: React.FC<JudgesPortalProps> = ({
                   <span className="text-xs text-indigo-400 font-semibold">{currentSubmission.datasetTitle}</span>
                   <h3 className="text-lg font-black text-white">{currentSubmission.title}</h3>
                   <p className="text-xs text-slate-400">
-                    Lead: <strong className="text-slate-200">{currentSubmission.studentName}</strong> ({currentSubmission.collegeRollNo}) • {currentSubmission.department}
+                    {currentSubmission.teamName ? (
+                      <>Team: <strong className="text-slate-200">{currentSubmission.teamName}</strong> ({currentSubmission.teamMembers?.join(', ')})</>
+                    ) : (
+                      <>Lead: <strong className="text-slate-200">{currentSubmission.studentName}</strong> ({currentSubmission.collegeRollNo})</>
+                    )} • {currentSubmission.department}
                   </p>
                 </div>
 

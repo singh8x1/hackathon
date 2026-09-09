@@ -259,6 +259,12 @@ export const SubmissionDetailModal: React.FC<SubmissionDetailModalProps> = ({
                     Participant Credentials
                   </h4>
                   <div className="space-y-1 text-xs text-slate-300">
+                    {submission.teamName ? (
+                      <div className="flex justify-between">
+                        <span className="text-slate-500">Team Name:</span>
+                        <span className="font-bold text-white bg-indigo-500/20 text-indigo-300 px-1.5 py-0.5 rounded">{submission.teamName}</span>
+                      </div>
+                    ) : null}
                     <div className="flex justify-between">
                       <span className="text-slate-500">Lead Author:</span>
                       <span className="font-bold text-white">{submission.studentName}</span>
@@ -272,9 +278,9 @@ export const SubmissionDetailModal: React.FC<SubmissionDetailModalProps> = ({
                       <span className="font-mono">{submission.yearOfStudy} • {submission.collegeRollNo}</span>
                     </div>
                     {submission.teamMembers && submission.teamMembers.length > 1 && (
-                      <div className="pt-1 border-t border-slate-800/60 flex justify-between">
+                      <div className="pt-2 mt-1 border-t border-slate-800/60 flex justify-between">
                         <span className="text-slate-500">Team Members:</span>
-                        <span className="text-right">{submission.teamMembers.join(', ')}</span>
+                        <span className="text-right">{submission.teamMembers.join(' & ')}</span>
                       </div>
                     )}
                   </div>

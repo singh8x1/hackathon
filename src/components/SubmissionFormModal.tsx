@@ -17,7 +17,7 @@ import {
   Zap,
   Info
 } from 'lucide-react';
-import { Submission, TrackType, PythonLibrary, InteractiveTool, UserProfile } from '../types';
+import { Submission, TrackType, PythonLibrary, InteractiveTool, UserProfile, Team } from '../types';
 import { KAGGLE_DATASETS } from '../data/datasets';
 
 interface SubmissionFormModalProps {
@@ -26,6 +26,7 @@ interface SubmissionFormModalProps {
   onSubmitSuccess: (newSubmission: Submission) => void;
   preSelectedDatasetId?: string;
   currentUser?: UserProfile | null;
+  currentTeam?: Team | null;
 }
 
 export const SubmissionFormModal: React.FC<SubmissionFormModalProps> = ({
@@ -33,18 +34,20 @@ export const SubmissionFormModal: React.FC<SubmissionFormModalProps> = ({
   onClose,
   onSubmitSuccess,
   preSelectedDatasetId,
-  currentUser
+  currentUser,
+  currentTeam
 }) => {
   // Form state
   const [title, setTitle] = useState('');
   const [studentName, setStudentName] = useState(currentUser?.name || '');
   const [teamMembersInput, setTeamMembersInput] = useState('');
+  const [teamId, setTeamId] = useState<string | undefined>(undefined);
+  const [teamName, setTeamName] = useState<string | undefined>(undefined);
   const [collegeRollNo, setCollegeRollNo] = useState(currentUser?.collegeRollNo || '');
   const [department, setDepartment] = useState(currentUser?.department || 'Computer Science & AI');
   const [yearOfStudy, setYearOfStudy] = useState(currentUser?.yearOfStudy || '3rd Year');
   const [datasetId, setDatasetId] = useState(preSelectedDatasetId || KAGGLE_DATASETS[0].id);
 
-  // Sync with currentUser when modal opens or user switches
   React.useEffect(() => {
     if (currentUser) {
       setStudentName(currentUser.name);
@@ -52,7 +55,20 @@ export const SubmissionFormModal: React.FC<SubmissionFormModalProps> = ({
       setDepartment(currentUser.department);
       setYearOfStudy(currentUser.yearOfStudy);
     }
-  }, [currentUser, isOpen]);
+    
+    if (currentTeam) {
+      const isCreator = currentTeam.creatorId === currentUser?.id;
+      const tName = currentTeam.name || `${currentTeam.creatorName} & ${currentTeam.invitedName || 'Partner'}`;
+      const partner = isCreator ? (currentTeam.invitedName || currentTeam.invitedRollNo) : currentTeam.creatorName;
+      setTeamMembersInput(`${currentUser?.name}, ${partner}`);
+      setTeamName(tName);
+      setTeamId(currentTeam.id);
+    } else {
+      setTeamMembersInput(currentUser?.name || '');
+      setTeamName(undefined);
+      setTeamId(undefined);
+    }
+  }, [currentUser, currentTeam, isOpen]);
   const [track, setTrack] = useState<TrackType>('python');
   
   // Python libraries
@@ -234,6 +250,8 @@ plt.show()`);
       userId: currentUser?.id,
       title: title.trim(),
       studentName: studentName.trim(),
+      teamId: teamId,
+      teamName: teamName,
       teamMembers: teamMembersInput.trim() 
         ? teamMembersInput.split(',').map(m => m.trim()).filter(Boolean)
         : [studentName.trim()],
@@ -317,7 +335,15 @@ plt.show()`);
               1. Participant &amp; Project Info
             </h4>
 
-            {currentUser && (
+            {currentUser && currentTeam ? (
+              <div className="p-2.5 rounded-xl bg-indigo-950/40 border border-indigo-500/30 text-xs text-indigo-300 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400" />
+                  <span>Submitting as Team <strong>{teamName}</strong> ({teamMembersInput})</span>
+                </div>
+                <span className="text-[10px] text-slate-400 font-mono">Linked to Profile</span>
+              </div>
+            ) : currentUser ? (
               <div className="p-2.5 rounded-xl bg-indigo-950/40 border border-indigo-500/30 text-xs text-indigo-300 flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <span className="w-2 h-2 rounded-full bg-emerald-400" />
@@ -325,7 +351,7 @@ plt.show()`);
                 </div>
                 <span className="text-[10px] text-slate-400 font-mono">Linked to Profile</span>
               </div>
-            )}
+            ) : null}
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="sm:col-span-2">

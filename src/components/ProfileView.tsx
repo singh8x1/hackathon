@@ -27,6 +27,7 @@ import {
 } from 'lucide-react';
 import { UserProfile, Submission } from '../types';
 import { AVATAR_COLORS } from '../data/mockUsers';
+import { TeamManagement } from './TeamManagement';
 
 interface ProfileViewProps {
   user: UserProfile | null;
